@@ -1,9 +1,7 @@
 import React from "react";
 import CarItem from "./CarItem";
 import userImage from "../../assets/all-images/cars-img/bmw-offer.png"; // Replace with the path to the user's image
-import Header from "./Header"; // Import the Header component
-import "./UserProfile.css"; // Import the CSS file for the styles
-
+import Header from "./InternalHeader"; // Import the Header component
 const UserProfile = () => {
   // Replace with actual user data
   const user = {
@@ -22,7 +20,7 @@ const UserProfile = () => {
   };
 
   return (
-    <div className="container mt-5">
+    <div className="container mt-5 mb-5 ">
       <div className="logout-container">
         <button className="btn btn-primary logout-btn" onClick={handleLogout}>
           Logout
