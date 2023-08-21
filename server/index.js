@@ -7,6 +7,7 @@ import Car from "./models/car-schema.js";
 
 const app = express();
 const PORT = process.env.PORT || 5005;
+``
 app.use(cors());
 app.use(express.json());
 
