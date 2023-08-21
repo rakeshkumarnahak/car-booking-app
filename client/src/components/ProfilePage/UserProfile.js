@@ -1,24 +1,33 @@
-import React from "react";
+import {React,useState,useEffect} from "react";
 import CarItem from "./CarItem";
 import userImage from "../../assets/all-images/cars-img/bmw-offer.png"; // Replace with the path to the user's image
 import Header from "./InternalHeader"; // Import the Header component
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 const UserProfile = () => {
-  // Replace with actual user data
-  const user = {
-    name: "John Doe",
-    email: "johndoe@example.com",
-    cars: [
-      { id: 1, make: "Toyota", model: "Corolla" },
-      { id: 2, make: "Honda", model: "Civic" },
-      { id: 3, make: "Ford", model: "Focus" },
-    ],
-  };
+  const history = useNavigate();
 
-  const handleLogout = () => {
-    // Implement your logout logic here
-    alert("Logout clicked");
-  };
+  const [user, setUser] = useState({});
+  const [cars, setCars] = useState([]);
 
+  useEffect(() => {
+    axios.get('/api/user')
+      .then((response) => setUser(response.data))
+      .catch((error) => console.error(error));
+
+    axios.get('/api/cars')
+      .then((response) => setCars(response.data))
+      .catch((error) => console.error(error));
+  }, []);
+
+  const handleLogout = async () => {
+    try {
+      await axios.post('/logout'); // Make sure the route matches your backend
+      history.push('/login'); // Redirect to the login page
+    } catch (error) {
+      console.error(error);
+    }
+  };
   return (
     <div className="container mt-5 mb-5 ">
       <div className="logout-container">
