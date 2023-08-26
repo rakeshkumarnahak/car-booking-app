@@ -2,10 +2,22 @@ import React from "react";
 import { Col } from "reactstrap";
 import { Link } from "react-router-dom";
 import "../../styles/car-item.css";
+import axios from "axios";
 
 const CarItem = (props) => {
   const { imgUrl, model, carName, automatic, speed, price } = props.item;
-
+  
+  const handleRentClick = async () => {
+    try {
+      const response = await axios.post("/reservecar", { carName });
+      if (response.status === 200) {
+        // Car reserved successfully
+        alert("Car reserved successfully!");
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
   return (
     <Col lg="4" md="4" sm="6" className="mb-5">
       <div className="car__item">
@@ -31,8 +43,8 @@ const CarItem = (props) => {
             </span>
           </div>
 
-          <button className=" w-50 car__item-btn car__btn-rent">
-            <Link to={`/cars/${carName}`}>Rent</Link>
+          <button className=" w-50 car__item-btn car__btn-rent" onClick={handleRentClick}>
+            <Link to={`/cars/${carName}`} >Rent</Link>
           </button>
 
           <button className=" w-50 car__item-btn car__btn-details">

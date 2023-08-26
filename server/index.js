@@ -90,6 +90,20 @@ try {
   res.status(500).json({ message: error.message });
 }
 });
+// Reserve Car
+app.post('/reservecar', (req, res) => {
+  const { carName } = req.body;
+  if (req.session.user) {
+    // Assuming user is logged in
+    const user = req.session.user;
+    // Assuming user.cars is an array in the user model where you can store reserved cars
+    user.cars.push({ carName });
+    user.save();
+    res.status(200).json({ message: "Car reserved successfully" });
+  } else {
+    res.status(401).json({ message: 'Not authenticated' });
+  }
+});
 
 // API to Fetch User Data (assuming user is authenticated)
 app.get('/user', (req, res) => {

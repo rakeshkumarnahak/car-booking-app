@@ -1,5 +1,4 @@
-import React, { useEffect } from "react";
-
+import React, { useEffect} from "react";
 import carData from "../assets/data/carData";
 import { Container, Row, Col } from "reactstrap";
 import Helmet from "../components/Helmet/Helmet";
@@ -8,14 +7,16 @@ import BookingForm from "../components/UI/BookingForm";
 import PaymentMethod from "../components/UI/PaymentMethod";
 
 const CarDetails = () => {
+
   const { slug } = useParams();
 
   const singleCarItem = carData.find((item) => item.carName === slug);
-
+ 
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [singleCarItem]);
 
+  
   return (
     <Helmet title={singleCarItem.carName}>
       <section>
@@ -117,7 +118,7 @@ const CarDetails = () => {
             <Col lg="5" className="mt-5">
               <div className="payment__info mt-5">
                 <h5 className="mb-4 fw-bold ">Payment Information</h5>
-                <PaymentMethod />
+                <PaymentMethod carName={singleCarItem.carName} />
               </div>
             </Col>
           </Row>

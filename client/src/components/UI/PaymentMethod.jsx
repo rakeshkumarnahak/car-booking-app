@@ -1,10 +1,25 @@
-import React from "react";
-
+import React,{useState} from "react";
+import axios from "axios";
 import masterCard from "../../assets/all-images/master-card.jpg";
 import paypal from "../../assets/all-images/paypal.jpg";
 import "../../styles/payment-method.css";
 
-const PaymentMethod = () => {
+const PaymentMethod = ({ carName }) => {
+  const [reservationStatus, setReservationStatus] = useState("");
+
+  const handleReserveClick = async () => {
+    try {
+      const response = await axios.post("/reservecar", { carName });
+      if (response.status === 200) {
+        // Car reserved successfully
+        setReservationStatus("success");
+        alert("sex")
+      }
+    } catch (error) {
+      console.error(error);
+      setReservationStatus("error");
+    }
+  };
   return (
     <>
       <div className="payment">
@@ -35,7 +50,7 @@ const PaymentMethod = () => {
         <img src={paypal} alt="" />
       </div>
       <div className="payment text-end mt-5">
-        <button>Reserve Now</button>
+        <button onClick={handleReserveClick}>Reserve Now</button>
       </div>
     </>
   );

@@ -13,14 +13,14 @@ const UserProfile = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    axios.get('/api/user')
+    axios.get('/user')
       .then((response) => {
         setUser(response.data);
         setLoading(false);
       })
       .catch((error) => console.error(error));
 
-    axios.get('/api/cars')
+    axios.get('/cars')
       .then((response) => setCars(response.data))
       .catch((error) => console.error(error));
   }, []);
@@ -55,17 +55,17 @@ const UserProfile = () => {
           </div>
         </div>
         <div className="card-footer">
-          <h3>Cars Rented:</h3>
-          <ul className="list-group">
-            {loading ? (
-              <p>Loading...</p>
-            ) : (
-              user?.cars?.map((car) => (
-                <CarItem key={car.id} make={car.make} model={car.model} />
-              ))
-            )}
-          </ul>
-        </div>
+        <h3>Cars Rented:</h3>
+        <ul className="list-group">
+          {loading ? (
+            <p>Loading...</p>
+          ) : (
+            user?.cars?.map((car, index) => (
+              <CarItem key={index} carName={car.carName} />
+            ))
+          )}
+        </ul>
+      </div>
       </div>
     </div>
   );
