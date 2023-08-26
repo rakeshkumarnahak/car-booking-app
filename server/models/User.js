@@ -1,4 +1,5 @@
-const mongoose = require("mongoose")
+const mongoose = require("mongoose");
+const { ObjectId } = require('mongodb');
 
 const UserSchema = new mongoose.Schema({
     fname: {
@@ -26,10 +27,10 @@ const UserSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    cpassword: {
-        type: String,
-        required: true
-    }
+    reservedCars: [{
+        type: ObjectId,       
+        ref: 'Car'
+    }]
 })
 
 module.exports = mongoose.model("User", UserSchema);

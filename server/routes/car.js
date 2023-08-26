@@ -1,6 +1,7 @@
 const router = require("express").Router();
 const authMiddleWare = require("../middlewares/auth");
 const Car = require("../models/Car");
+const User = require("../models/User");
 
 //Car Registration
 
@@ -22,17 +23,47 @@ router.post('/registercar', authMiddleWare, async (req, res) => {
 
 
 // Reserve Car
-router.post('/reservecar', authMiddleWare, (req, res) => {
-  const { carName } = req.body;
-  if (req.session.user) {
-    // Assuming user is logged in
-    const user = req.session.user;
-    // Assuming user.cars is an array in the user model where you can store reserved cars
-    user.cars.push({ carName });
-    user.save();
+router.post('/reservecar', authMiddleWare, async (req, res) => {
+
+  try {
+    const { carId, email } = req.body;
+
+    const car = await Car.findById(carId);
+    if (!car) {
+      return res.status(404).json({ message: 'Car not found' });
+    }
+
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    user.reservedCars.push(carId);
+    await user.save();
     res.status(200).json({ message: "Car reserved successfully" });
-  } else {
-    res.status(401).json({ message: 'Not authenticated' });
+  } catch (error) {
+    res.status(404).json({ message: error.message });
+  }
+
+});
+
+//get all cars
+router.get('/allcars', authMiddleWare, async (req, res) => {
+  try {
+    const cars = await Car.find();
+    res.status(200).json(cars);
+  } catch (error) {
+    res.status(404).json({ message: error.message });
+  }
+});
+
+// get car by id
+router.get('/car/:id', authMiddleWare, async (req, res) => {
+  try {
+    const car = await Car.findById(req.params.id);
+    res.status(200).json(car);
+  } catch (error) {
+    res.status(404).json({ message: error.message });
   }
 });
 

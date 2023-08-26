@@ -10,11 +10,11 @@ router.post("/signup", async (req, res) => {
         const existingUser = await User.findOne({ email: req.body.email });
         if (existingUser) return res.status(400).json("Email already exists");
 
+        const { fname, lname, email, password, } = req.body;
         //generate new password
         const salt = await bcrypt.genSalt(10);
-        const hashedPassword = await bcrypt.hash(req.body.password, salt);
+        const hashedPassword = await bcrypt.hash(password, salt);
 
-        const { fname, lname, email, password, cpassword } = req.body;
 
         //create new user
         const newUser = new User({
@@ -22,7 +22,6 @@ router.post("/signup", async (req, res) => {
             lname,
             email,
             password: hashedPassword,
-            cpassword
         });
 
         //generate token
