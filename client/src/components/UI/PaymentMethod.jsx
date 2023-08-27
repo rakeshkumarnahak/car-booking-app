@@ -1,4 +1,4 @@
-import React,{useState} from "react";
+import React, { useState } from "react";
 import axios from "axios";
 import masterCard from "../../assets/all-images/master-card.jpg";
 import paypal from "../../assets/all-images/paypal.jpg";
@@ -9,11 +9,31 @@ const PaymentMethod = ({ carName }) => {
 
   const handleReserveClick = async () => {
     try {
-      const response = await axios.post("/reservecar", { carName });
-      if (response.status === 200) {
+      // const response = await axios.post("/reservecar", { carName });
+
+      const accessToken = JSON.parse(localStorage.getItem("accessToken"));
+      const userData = JSON.parse(localStorage.getItem("userData"));
+
+      let data = JSON.stringify({
+        carId: "64e9fb3060dee91f11d63455",
+        email: userData.email,
+      });
+
+      let config = {
+        method: "post",
+        maxBodyLength: Infinity,
+        url: "https://car-booking-five.vercel.app/api/car/reservecar",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+        data: data,
+      };
+
+      const res = await axios.request(config);
+      if (res.status === 200) {
         // Car reserved successfully
         setReservationStatus("success");
-        alert("sex")
       }
     } catch (error) {
       console.error(error);

@@ -1,10 +1,9 @@
-import React, { useRef, useEffect,useState,useContext} from "react";
+import React, { useRef, useEffect, useState, useContext } from "react";
 import { Container, Row, Col } from "reactstrap";
 import { Link, NavLink } from "react-router-dom";
 import "../../styles/header.css";
 import axios from "axios";
 import { UserContext } from "../Context/UserContext";
-
 
 const navLinks = [
   {
@@ -32,23 +31,23 @@ const navLinks = [
 
 const Header = () => {
   const menuRef = useRef(null);
-  const [user,setUser]=useState(null);
-  const URL="http://localhost:5005"
+  const [user, setUser] = useState(null);
+  // const URL = "http://localhost:5005";
   const toggleMenu = () => menuRef.current.classList.toggle("menu__active");
   const { email, password } = useContext(UserContext);
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const response = await axios.post(`${URL}/login`,{email,password});
-        const user = response.data.user;
-        setUser(user.fname);
+        const userData = JSON.parse(localStorage.getItem("userData"));
+        console.log("*** DEBUG ", userData);
+        setUser(userData.fname);
       } catch (error) {
-        console.log("Error retrieving user:",error);
+        console.log("Error retrieving user:", error);
       }
     };
 
     fetchUser();
-  }, [email,password]);
+  }, [email, password]);
 
   return (
     <header className="header">
@@ -67,20 +66,30 @@ const Header = () => {
 
             <Col lg="6" md="6" sm="6">
               <div className="header__top__right d-flex align-items-center justify-content-end gap-3">
-              {user ? (
-                  <Link to="/profile" className="d-flex align-items-center gap-1">
-                    <i class="ri-user-line"></i>{user}
+                {user ? (
+                  <Link
+                    to="/profile"
+                    className="d-flex align-items-center gap-1"
+                  >
+                    <i class="ri-user-line"></i>
+                    {user}
                   </Link>
                 ) : (
                   <>
-                <Link to="/login" className=" d-flex align-items-center gap-1">
-                  <i class="ri-login-circle-line"></i>Login
-                </Link>
+                    <Link
+                      to="/login"
+                      className=" d-flex align-items-center gap-1"
+                    >
+                      <i class="ri-login-circle-line"></i>Login
+                    </Link>
 
-                <Link to="/register" className=" d-flex align-items-center gap-1">
-                  <i class="ri-user-line"></i> Register
-                </Link>
-                </>
+                    <Link
+                      to="/register"
+                      className=" d-flex align-items-center gap-1"
+                    >
+                      <i class="ri-user-line"></i> Register
+                    </Link>
+                  </>
                 )}
               </div>
             </Col>
