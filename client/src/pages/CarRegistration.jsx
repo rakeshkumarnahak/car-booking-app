@@ -14,11 +14,15 @@ const CarRegistration = () => {
     postalCode: "",
     phoneNumber: "",
     email: "",
+    carName: "",
     model: "",
+    description: "",
+    automatic: "",
     year: "",
     color: "",
     licensePlate: "",
-    imageBase64: "",
+    imageUrl: "",
+    price: "",
   });
 
   let name, value;
@@ -33,13 +37,13 @@ const CarRegistration = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      if (carInfo.imageFile) {
-        const imageBase64 = await convertImageToBase64(carInfo.imageFile);
-        carInfo.imageBase64 = imageBase64.split(",")[1];
-      }
+      // if (carInfo.imageFile) {
+      //   const imageBase64 = await convertImageToBase64(carInfo.imageFile);
+      //   carInfo.imageBase64 = imageBase64.split(",")[1];
+      // }
 
       // const response = await axios.post(`${URL}/registercar`, carInfo);
-      const accessToken = JSON.parse(localStorage.getItem("accessToken"));
+      const accessToken = JSON.parse(sessionStorage.getItem("accessToken"));
 
       // let data = JSON.stringify({
       //   fullName: "priyanshu",
@@ -68,7 +72,7 @@ const CarRegistration = () => {
         data: data,
       };
 
-      const res = axios.request(config);
+      const res = await axios.request(config);
 
       if (res.status === 200) {
         window.alert("Registration successful");
@@ -83,21 +87,21 @@ const CarRegistration = () => {
     }
   };
 
-  const handleImageChange = (e) => {
-    setCarInfo({ ...carInfo, imageFile: e.target.files[0] });
-  };
-  const convertImageToBase64 = (imageFile) => {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = () => {
-        resolve(reader.result);
-      };
-      reader.onerror = (error) => {
-        reject(error);
-      };
-      reader.readAsDataURL(imageFile);
-    });
-  };
+  // const handleImageChange = (e) => {
+  //   setCarInfo({ ...carInfo, imageFile: e.target.files[0] });
+  // };
+  // const convertImageToBase64 = (imageFile) => {
+  //   return new Promise((resolve, reject) => {
+  //     const reader = new FileReader();
+  //     reader.onload = () => {
+  //       resolve(reader.result);
+  //     };
+  //     reader.onerror = (error) => {
+  //       reject(error);
+  //     };
+  //     reader.readAsDataURL(imageFile);
+  //   });
+  // };
 
   return (
     <>
@@ -220,10 +224,49 @@ const CarRegistration = () => {
                 </span>
                 <input
                   type="text"
+                  name="carName"
+                  className="form-control"
+                  placeholder="Car Name"
+                  value={carInfo.carName}
+                  onChange={handleChange}
+                />
+              </div>
+              <div className="input-group mb-3">
+                <span className="input-group-text">
+                  <i className="fa fa-lock"></i>
+                </span>
+                <input
+                  type="text"
                   name="model"
                   className="form-control"
                   placeholder="Model"
                   value={carInfo.model}
+                  onChange={handleChange}
+                />
+              </div>
+              <div className="input-group mb-3">
+                <span className="input-group-text">
+                  <i className="fa fa-lock"></i>
+                </span>
+                <input
+                  type="text"
+                  name="description"
+                  className="form-control"
+                  placeholder="Description"
+                  value={carInfo.description}
+                  onChange={handleChange}
+                />
+              </div>
+              <div className="input-group mb-3">
+                <span className="input-group-text">
+                  <i className="fa fa-lock"></i>
+                </span>
+                <input
+                  type="text"
+                  name="automatic"
+                  className="form-control"
+                  placeholder="Automatic / Non- Automatic"
+                  value={carInfo.automatic}
                   onChange={handleChange}
                 />
               </div>
@@ -249,7 +292,7 @@ const CarRegistration = () => {
                   name="color"
                   className="form-control"
                   placeholder="Color"
-                  value={carInfo.text}
+                  value={carInfo.color}
                   onChange={handleChange}
                 />
               </div>
@@ -284,6 +327,33 @@ const CarRegistration = () => {
                   <i className="fa fa-lock"></i>
                 </span>
                 <input
+                  type="text"
+                  name="imageUrl"
+                  className="form-control"
+                  placeholder="Image link"
+                  value={carInfo.imageUrl}
+                  onChange={handleChange}
+                />
+              </div>
+              <div className="input-group mb-3">
+                <span className="input-group-text">
+                  <i className="fa fa-lock"></i>
+                </span>
+                <input
+                  type="text"
+                  name="price"
+                  className="form-control"
+                  placeholder="Price per Hour"
+                  value={carInfo.price}
+                  onChange={handleChange}
+                />
+              </div>
+
+              {/* <div className="input-group mb-3">
+                <span className="input-group-text">
+                  <i className="fa fa-lock"></i>
+                </span>
+                <input
                   type="file"
                   name="photo"
                   accept="image/*"
@@ -291,7 +361,7 @@ const CarRegistration = () => {
                   placeholder="Photo"
                   onChange={handleImageChange}
                 />
-              </div>
+              </div> */}
               <h3 className="text-center pt-3">Declaration</h3>
               <p className="text-center text-muted mt-2">
                 I hereby certify that the above information is true and accurate

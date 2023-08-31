@@ -7,7 +7,7 @@
 .card {
     border: none;
     transition: box-shadow 0.3s ease-in-out;
-    
+
 }
 
 .card:hover {
@@ -88,4 +88,9 @@
 
 .logout-btn:hover {
     background-color: #0056b3;
+}
+
+.rented-cars {
+    display: grid;
+    grid-template-columns: 2;
 }

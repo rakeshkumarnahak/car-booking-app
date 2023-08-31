@@ -5,8 +5,8 @@ import "../../styles/car-item.css";
 import axios from "axios";
 
 const CarItem = (props) => {
-  const { imgUrl, model, carName, automatic, speed, price } = props.item;
-  
+  const { imgUrl, model, carName, automatic, speed, price, _id } = props.item;
+
   const handleRentClick = async () => {
     try {
       const response = await axios.post("/reservecar", { carName });
@@ -43,12 +43,15 @@ const CarItem = (props) => {
             </span>
           </div>
 
-          <button className=" w-50 car__item-btn car__btn-rent" onClick={handleRentClick}>
-            <Link to={`/cars/${carName}`} >Rent</Link>
+          <button
+            className=" w-50 car__item-btn car__btn-rent"
+            onClick={handleRentClick}
+          >
+            <Link to={`/cars/${_id}`}>Rent</Link>
           </button>
 
           <button className=" w-50 car__item-btn car__btn-details">
-            <Link to={`/cars/${carName}`}>Details</Link>
+            <Link to={`/cars/${_id}`}>Details</Link>
           </button>
         </div>
       </div>

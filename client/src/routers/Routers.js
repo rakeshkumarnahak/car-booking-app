@@ -15,15 +15,24 @@ import Profile from "../pages/Profile";
 const Routers = () => {
   return (
     <Routes>
-      <Route path="/" element={<Navigate to="/home" />} />
-      <Route path='/profile' element={<Profile/>}/>
-      <Route path='/register' element={<Register/>}/>
-      <Route path='/login' element={<Login/>}/>
+      <Route
+        path="/"
+        element={
+          sessionStorage.getItem("userData") ? (
+            <Navigate to="/home" />
+          ) : (
+            <Navigate to="/login" />
+          )
+        }
+      />
+      <Route path="/profile" element={<Profile />} />
+      <Route path="/register" element={<Register />} />
+      <Route path="/login" element={<Login />} />
       <Route path="/home" element={<Home />} />
       <Route path="/about" element={<About />} />
       <Route path="/cars" element={<CarListing />} />
-      <Route path="/cars/:slug" element={<CarDetails />} />
-      <Route path='/registercar' element={<CarRegistration/>}/>
+      <Route path="/cars/:carId" element={<CarDetails />} />
+      <Route path="/registercar" element={<CarRegistration />} />
       <Route path="/blogs" element={<Blog />} />
       <Route path="/blogs/:slug" element={<BlogDetails />} />
       <Route path="/contact" element={<Contact />} />

@@ -5,14 +5,46 @@ const User = require("../models/User");
 
 //Car Registration
 
-router.post('/registercar', authMiddleWare, async (req, res) => {
+router.post("/registercar", authMiddleWare, async (req, res) => {
   try {
     const check = await Car.findOne({ email: req.body.email });
     if (check) {
       return res.status(400).json({ message: "Exist" });
     }
-    const { fullName, city, state, postalCode, phoneNumber, email, model, year, color, licensePlate, imageBase64 } = req.body;
-    const newCar = new Car({ fullName, city, state, postalCode, phoneNumber, email, model, year, color, licensePlate, imageBase64 })
+    const {
+      fullName,
+      city,
+      state,
+      postalCode,
+      phoneNumber,
+      email,
+      carName,
+      model,
+      description,
+      automatic,
+      year,
+      color,
+      licensePlate,
+      imageUrl,
+      price,
+    } = req.body;
+    const newCar = new Car({
+      fullName,
+      city,
+      state,
+      postalCode,
+      phoneNumber,
+      email,
+      carName,
+      model,
+      description,
+      automatic,
+      year,
+      color,
+      licensePlate,
+      imageUrl,
+      price,
+    });
     await newCar.save();
     res.status(200).json({ message: "Car Registration successful" });
   } catch (error) {
@@ -21,21 +53,19 @@ router.post('/registercar', authMiddleWare, async (req, res) => {
   }
 });
 
-
 // Reserve Car
-router.post('/reservecar', authMiddleWare, async (req, res) => {
-
+router.post("/reservecar", authMiddleWare, async (req, res) => {
   try {
     const { carId, email } = req.body;
 
     const car = await Car.findById(carId);
     if (!car) {
-      return res.status(404).json({ message: 'Car not found' });
+      return res.status(404).json({ message: "Car not found" });
     }
 
     const user = await User.findOne({ email });
     if (!user) {
-      return res.status(404).json({ message: 'User not found' });
+      return res.status(404).json({ message: "User not found" });
     }
 
     user.reservedCars.push(carId);
@@ -44,11 +74,10 @@ router.post('/reservecar', authMiddleWare, async (req, res) => {
   } catch (error) {
     res.status(404).json({ message: error.message });
   }
-
 });
 
 //get all cars
-router.get('/allcars', authMiddleWare, async (req, res) => {
+router.get("/allcars", authMiddleWare, async (req, res) => {
   try {
     const cars = await Car.find();
     res.status(200).json(cars);
@@ -58,7 +87,7 @@ router.get('/allcars', authMiddleWare, async (req, res) => {
 });
 
 // get car by id
-router.get('/car/:id', authMiddleWare, async (req, res) => {
+router.get("/car/:id", authMiddleWare, async (req, res) => {
   try {
     const car = await Car.findById(req.params.id);
     res.status(200).json(car);

@@ -38,8 +38,8 @@ const Header = () => {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const userData = JSON.parse(localStorage.getItem("userData"));
-        console.log("*** DEBUG ", userData);
+        const userData = JSON.parse(sessionStorage.getItem("userData"));
+
         setUser(userData.fname);
       } catch (error) {
         console.log("Error retrieving user:", error);

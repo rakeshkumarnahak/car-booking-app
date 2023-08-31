@@ -2,6 +2,7 @@ import React, { useContext } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { UserContext } from "../components/Context/UserContext";
+import toast, { Toaster } from "react-hot-toast";
 
 const Login = () => {
   const history = useNavigate();
@@ -18,9 +19,14 @@ const Login = () => {
       // });
       // console.log(res);
 
+      // let data = JSON.stringify({
+      //   email: "priyanshupanda.ctp@gmail.com",
+      //   password: "priyanshu",
+      // });
+
       let data = JSON.stringify({
-        email: "priyanshupanda.ctp@gmail.com",
-        password: "priyanshu",
+        email: email,
+        password: password,
       });
 
       let config = {
@@ -39,13 +45,28 @@ const Login = () => {
       if (response.status === 200) {
         window.alert("Login Successful");
         history("/home");
+        if (
+          !sessionStorage.getItem("accessToken") &&
+          !sessionStorage.getItem("userData")
+        ) {
+          sessionStorage.setItem(
+            "accessToken",
+            JSON.stringify(response.data.accessToken)
+          );
+          sessionStorage.setItem(
+            "userData",
+            JSON.stringify(response.data.user)
+          );
+        }
       } else {
         window.alert("User have not sign up");
+        toast.success("Successfully created!");
         console.log("Please SignUp");
       }
     } catch (error) {
       console.log(error);
-      window.alert("Please SignUp");
+      window.alert("User have not sign up");
+      toast.success("Successfully created!");
       console.log("User have not sign up");
     }
   };
@@ -56,6 +77,7 @@ const Login = () => {
         <div className="row mt-5">
           <div className="col-lg-4 bg-white m-auto rounded-top wrapper">
             <h2 className="text-center pt-3 ">Login Now</h2>
+
             <form onSubmit={submit} className="py-3">
               <div className="input-group mb-3">
                 <span className="input-group-text">
@@ -85,6 +107,7 @@ const Login = () => {
                   placeholder="Password"
                 />
               </div>
+
               <div className="d-grid">
                 <button type="submit" className="btn btn-success">
                   Login

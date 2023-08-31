@@ -1,21 +1,26 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 import masterCard from "../../assets/all-images/master-card.jpg";
 import paypal from "../../assets/all-images/paypal.jpg";
 import "../../styles/payment-method.css";
 
-const PaymentMethod = ({ carName }) => {
+const PaymentMethod = ({ carId }) => {
   const [reservationStatus, setReservationStatus] = useState("");
+
+  const history = useNavigate();
 
   const handleReserveClick = async () => {
     try {
       // const response = await axios.post("/reservecar", { carName });
 
-      const accessToken = JSON.parse(localStorage.getItem("accessToken"));
-      const userData = JSON.parse(localStorage.getItem("userData"));
+      console.log("1");
+
+      const accessToken = JSON.parse(sessionStorage.getItem("accessToken"));
+      const userData = JSON.parse(sessionStorage.getItem("userData"));
 
       let data = JSON.stringify({
-        carId: "64e9fb3060dee91f11d63455",
+        carId: carId,
         email: userData.email,
       });
 
@@ -34,6 +39,7 @@ const PaymentMethod = ({ carName }) => {
       if (res.status === 200) {
         // Car reserved successfully
         setReservationStatus("success");
+        history("/home");
       }
     } catch (error) {
       console.error(error);

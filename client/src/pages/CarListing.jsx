@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Container, Row, Col } from "reactstrap";
 import Helmet from "../components/Helmet/Helmet";
 import CommonSection from "../components/UI/CommonSection";
@@ -7,28 +7,34 @@ import CarItem from "../components/UI/CarItem";
 import axios from "axios";
 
 const CarListing = () => {
-  let carData;
+  const [carData, setCarData] = useState([]);
+  const accessToken = JSON.parse(sessionStorage.getItem("accessToken"));
+  console.log(accessToken);
 
-  let config = {
-    method: "get",
-    maxBodyLength: Infinity,
-    url: "https://car-booking-five.vercel.app/api/car/allcars",
-    headers: {
-      Authorization:
-        "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0ZTlmNmE3OTMzNDczOGY3M2I1MTJjOSIsImVtYWlsIjoicHJpeWFuc2h1cGFuZGEuY3RwQGdtYWlsLmNvbSIsImlhdCI6MTY5MzA1NTQwOCwiZXhwIjoxNjkzMTQxODA4fQ.OJDE5D_31hlhD8tBGDrp03LURiYQO29HIdQPnXm7yw0",
-    },
+  const fetchCarData = async () => {
+    try {
+      let config = {
+        method: "get",
+        maxBodyLength: Infinity,
+        url: "https://car-booking-five.vercel.app/api/car/allcars",
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      };
+
+      const response = await axios.request(config);
+      console.log(response.data);
+
+      //TODO: Get the actual car data by fetching from the DB
+      setCarData(response.data);
+    } catch (error) {
+      console.error(error);
+    }
   };
-
-  axios
-    .request(config)
-    .then((response) => {
-      carData = response.data;
-      console.log(JSON.stringify(response.data));
-    })
-    .catch((error) => {
-      console.log(error);
-    });
-
+  useEffect(() => {
+    fetchCarData();
+  }, []);
+  console.log(carData);
   return (
     <Helmet title="Cars">
       <CommonSection title="Car Listing" />

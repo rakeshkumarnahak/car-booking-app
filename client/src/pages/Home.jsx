@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 import HeroSlider from "../components/UI/HeroSlider";
 import Helmet from "../components/Helmet/Helmet";
@@ -7,16 +7,43 @@ import { Container, Row, Col } from "reactstrap";
 import FindCarForm from "../components/UI/FindCarForm";
 import AboutSection from "../components/UI/AboutSection";
 import ServicesList from "../components/UI/ServicesList";
-import carData from "../assets/data/carData";
+import defaultCarData from "../assets/data/carData";
 import CarItem from "../components/UI/CarItem";
 import RegisterCarSection from "../components/UI/RegisterCarSection";
 import Testimonial from "../components/UI/Testimonial";
-
 import BlogList from "../components/UI/BlogList";
-
-
+import axios from "axios";
 
 const Home = () => {
+  const [carData, setCarData] = useState([]);
+  const accessToken = JSON.parse(sessionStorage.getItem("accessToken"));
+  console.log(accessToken);
+
+  const fetchCarData = async () => {
+    try {
+      let config = {
+        method: "get",
+        maxBodyLength: Infinity,
+        url: "https://car-booking-five.vercel.app/api/car/allcars",
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      };
+
+      const response = await axios.request(config);
+      console.log(response.data);
+
+      //TODO: Get the actual car data by fetching from the DB
+      setCarData(response.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  useEffect(() => {
+    fetchCarData();
+  }, []);
+  console.log(carData);
+
   return (
     <Helmet title="Home">
       {/* ============= hero section =========== */}

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import CarItem from "./CarItem";
+import CarItem from "../UI/CarItem";
 import userImage from "../../assets/all-images/cars-img/bmw-offer.png";
 import InternalHeader from "./InternalHeader";
 import { useNavigate } from "react-router-dom";
@@ -7,28 +7,51 @@ import axios from "axios";
 
 const UserProfile = () => {
   const history = useNavigate();
+  const accessToken = JSON.parse(sessionStorage.getItem("accessToken"));
 
   const [user, setUser] = useState({});
   const [cars, setCars] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    axios.get('/user')
-      .then((response) => {
-        setUser(response.data);
-        setLoading(false);
-      })
-      .catch((error) => console.error(error));
+  console.log({ cars });
 
-    axios.get('/cars')
-      .then((response) => setCars(response.data))
-      .catch((error) => console.error(error));
+  const fetchUserDetails = async () => {
+    setLoading(true);
+
+    const userData = JSON.parse(sessionStorage.getItem("userData"));
+    const accessToken = JSON.parse(sessionStorage.getItem("accessToken"));
+
+    try {
+      let config = {
+        method: "get",
+        maxBodyLength: Infinity,
+        url:
+          "https://car-booking-five.vercel.app/api/car/user/" + userData?.email,
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      };
+
+      axios.request(config);
+
+      const response = await axios.request(config);
+      setUser(response.data.user);
+      setCars(response.data.cars);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchUserDetails();
   }, []);
 
   const handleLogout = async () => {
     try {
-      await axios.post('/logout');
-      history.push('/login');
+      await axios.post("/logout");
+      history.push("/login");
     } catch (error) {
       console.error(error);
     }
@@ -54,18 +77,18 @@ const UserProfile = () => {
             <p>{user.email}</p>
           </div>
         </div>
-        <div className="card-footer">
-        <h3>Cars Rented:</h3>
-        <ul className="list-group">
-          {loading ? (
-            <p>Loading...</p>
-          ) : (
-            user?.cars?.map((car, index) => (
-              <CarItem key={index} carName={car.carName} />
-            ))
-          )}
-        </ul>
-      </div>
+        <div className="card-footer container">
+          <h3>Cars Rented:</h3>
+          <ul className="row">
+            {loading ? (
+              <p>Loading...</p>
+            ) : (
+              cars?.map((car, index) => (
+                <CarItem item={car} key={car.id} className="col-md-6" />
+              ))
+            )}
+          </ul>
+        </div>
       </div>
     </div>
   );

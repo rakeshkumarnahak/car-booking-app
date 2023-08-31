@@ -62,8 +62,8 @@ const Register = () => {
       console.log(response);
       // console.log(JSON.parse(response.data));
 
-      localStorage.setItem("userData", JSON.stringify(response.data.user));
-      localStorage.setItem(
+      sessionStorage.setItem("userData", JSON.stringify(response.data.user));
+      sessionStorage.setItem(
         "accessToken",
         JSON.stringify(response.data.accessToken)
       );
