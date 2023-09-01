@@ -31,23 +31,10 @@ const navLinks = [
 
 const Header = () => {
   const menuRef = useRef(null);
-  const [user, setUser] = useState(null);
-  // const URL = "http://localhost:5005";
+  // const [user, setUser] = useState(null);
+
   const toggleMenu = () => menuRef.current.classList.toggle("menu__active");
-  const { email, password } = useContext(UserContext);
-  useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const userData = JSON.parse(sessionStorage.getItem("userData"));
-
-        setUser(userData.fname);
-      } catch (error) {
-        console.log("Error retrieving user:", error);
-      }
-    };
-
-    fetchUser();
-  }, [email, password]);
+  const { user, accessToken } = useContext(UserContext);
 
   return (
     <header className="header">
@@ -72,7 +59,7 @@ const Header = () => {
                     className="d-flex align-items-center gap-1"
                   >
                     <i class="ri-user-line"></i>
-                    {user}
+                    {user.fname}
                   </Link>
                 ) : (
                   <>

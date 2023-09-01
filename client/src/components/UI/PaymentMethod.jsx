@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import masterCard from "../../assets/all-images/master-card.jpg";
@@ -10,8 +10,13 @@ const PaymentMethod = ({ carId }) => {
 
   const history = useNavigate();
 
+  const [user, setUser] = useState({});
+  const [cars, setCars] = useState([]);
+  const [loading, setLoading] = useState(false);
+
   const handleReserveClick = async () => {
     try {
+      setLoading(true);
       // const response = await axios.post("/reservecar", { carName });
 
       console.log("1");
@@ -39,13 +44,48 @@ const PaymentMethod = ({ carId }) => {
       if (res.status === 200) {
         // Car reserved successfully
         setReservationStatus("success");
-        history("/home");
+        history("/profile");
       }
     } catch (error) {
       console.error(error);
       setReservationStatus("error");
+    } finally {
+      setLoading(false);
     }
   };
+
+  const fetchUserDetails = async () => {
+    setLoading(true);
+
+    const userData = JSON.parse(sessionStorage.getItem("userData"));
+    const accessToken = JSON.parse(sessionStorage.getItem("accessToken"));
+
+    try {
+      let config = {
+        method: "get",
+        maxBodyLength: Infinity,
+        url:
+          "https://car-booking-five.vercel.app/api/car/user/" + userData?.email,
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      };
+
+      axios.request(config);
+
+      const response = await axios.request(config);
+      setUser(response.data.user);
+      setCars(response.data.cars);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchUserDetails();
+  }, []);
   return (
     <>
       <div className="payment">
@@ -76,7 +116,11 @@ const PaymentMethod = ({ carId }) => {
         <img src={paypal} alt="" />
       </div>
       <div className="payment text-end mt-5">
-        <button onClick={handleReserveClick}>Reserve Now</button>
+        <button onClick={handleReserveClick}>
+          {user?.reservedCars?.includes(carId)
+            ? "Already Reserved"
+            : "Reserve Now"}
+        </button>
       </div>
     </>
   );

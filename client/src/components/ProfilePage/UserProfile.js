@@ -7,13 +7,15 @@ import axios from "axios";
 
 const UserProfile = () => {
   const history = useNavigate();
-  const accessToken = JSON.parse(sessionStorage.getItem("accessToken"));
+  // const accessToken = JSON.parse(sessionStorage.getItem("accessToken"));
 
   const [user, setUser] = useState({});
   const [cars, setCars] = useState([]);
   const [loading, setLoading] = useState(true);
 
   console.log({ cars });
+
+  const handleLogOut = async () => {};
 
   const fetchUserDetails = async () => {
     setLoading(true);
